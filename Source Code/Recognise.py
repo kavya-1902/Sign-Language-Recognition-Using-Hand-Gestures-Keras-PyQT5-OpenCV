@@ -1,6 +1,3 @@
-__author__ = 'Shadab Shaikh, Obaid Kazi, Rupesh poudel'
-__SourcerepoLink__ = 'https://github.com/rrupeshh/Simple-Sign-Language-Detector'
-
 import cv2
 import numpy as np
 import os
@@ -51,91 +48,93 @@ def imgprocessing():
   #cv2.destroyAllWindows()
 
 def predictor():
-       import numpy as np
-       from keras.preprocessing import image
-       test_image = image.load_img('1.png', target_size=(64, 64))
-       test_image = image.img_to_array(test_image)
-       test_image = np.expand_dims(test_image, axis = 0)
-       result = classifier.predict(test_image)
-       for i in range(len(fileEntry)):
-	       image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[i])
-	       original = cv2.imread("1.png")
-	       sift = cv2.xfeatures2d.SIFT_create()
-	       kp_1, desc_1 = sift.detectAndCompute(original, None)
-	       kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
-	       
-	       index_params = dict(algorithm=0, trees=5)
-	       search_params = dict()
-	       flann = cv2.FlannBasedMatcher(index_params, search_params)
-	        
-	       matches = flann.knnMatch(desc_1, desc_2, k=2)
-	       
-	       good_points = []
-	       ratio = 0.6
-	       for m, n in matches:
-	              if m.distance < ratio*n.distance:
-	                     good_points.append(m)
-	       print(fileEntry[i])
-	       if(abs(len(good_points)+len(matches))>20):
-	       	gesname=fileEntry[i]
-	       	gesname=gesname.replace('.png','')
-	        return gesname
-       #print(good_points)
-       #if(abs(fin)<=2):
-             # return 'space'
-       if result[0][0] == 1:
-              return 'A'
-       elif result[0][1] == 1:
-              return 'B'
-       elif result[0][2] == 1:
-              return 'C'
-       elif result[0][3] == 1:
-              return 'D'
-       elif result[0][4] == 1:
-              return 'E'
-       elif result[0][5] == 1:
-              return 'F'
-       elif result[0][6] == 1:
-              return 'G'
-       elif result[0][7] == 1:
-              return 'H'
-       elif result[0][8] == 1:
-              return 'I'
-       elif result[0][9] == 1:
-              return 'J'
-       elif result[0][10] == 1:
-              return 'K'
-       elif result[0][11] == 1:
-              return 'L'
-       elif result[0][12] == 1:
-              return 'M'
-       elif result[0][13] == 1:
-              return 'N'
-       elif result[0][14] == 1:
-              return 'O'
-       elif result[0][15] == 1:
-              return 'P'
-       elif result[0][16] == 1:
-              return 'Q'
-       elif result[0][17] == 1:
-              return 'R'
-       elif result[0][18] == 1:
-              return 'S'
-       elif result[0][19] == 1:
-              return 'T'
-       elif result[0][20] == 1:
-              return 'U'
-       elif result[0][21] == 1:
-              return 'V'
-       elif result[0][22] == 1:
-              return 'W'
-       elif result[0][23] == 1:
-              return 'X'
-       elif result[0][24] == 1:
-              return 'Y'
-       elif result[0][25] == 1:
-              return 'Z'
-       
+    import numpy as np
+    from keras.preprocessing import image
+
+    test_image = image.load_img('1.png', target_size=(64, 64))
+    test_image = image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis=0)
+    result = classifier.predict(test_image)
+
+    for i in range(len(fileEntry)):
+        image_to_compare = cv2.imread("./SampleGestures/" + fileEntry[i])
+        original = cv2.imread("1.png")
+        sift = cv2.xfeatures2d.SIFT_create()
+        kp_1, desc_1 = sift.detectAndCompute(original, None)
+        kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
+
+        index_params = dict(algorithm=0, trees=5)
+        search_params = dict()
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+        matches = flann.knnMatch(desc_1, desc_2, k=2)
+
+        good_points = []
+        ratio = 0.6
+        for m, n in matches:
+            if m.distance < ratio * n.distance:
+                good_points.append(m)
+        print(fileEntry[i])
+        if abs(len(good_points) + len(matches)) > 20:
+            gesname = fileEntry[i]
+            gesname = gesname.replace('.png', '')
+            return gesname
+
+    # print(good_points)
+    # if(abs(fin)<=2):
+    #     return 'space'
+    if result[0][0] == 1:
+        return 'A'
+    elif result[0][1] == 1:
+        return 'B'
+    elif result[0][2] == 1:
+        return 'C'
+    elif result[0][3] == 1:
+        return 'D'
+    elif result[0][4] == 1:
+        return 'E'
+    elif result[0][5] == 1:
+        return 'F'
+    elif result[0][6] == 1:
+        return 'G'
+    elif result[0][7] == 1:
+        return 'H'
+    elif result[0][8] == 1:
+        return 'I'
+    elif result[0][9] == 1:
+        return 'J'
+    elif result[0][10] == 1:
+        return 'K'
+    elif result[0][11] == 1:
+        return 'L'
+    elif result[0][12] == 1:
+        return 'M'
+    elif result[0][13] == 1:
+        return 'N'
+    elif result[0][14] == 1:
+        return 'O'
+    elif result[0][15] == 1:
+        return 'P'
+    elif result[0][16] == 1:
+        return 'Q'
+    elif result[0][17] == 1:
+        return 'R'
+    elif result[0][18] == 1:
+        return 'S'
+    elif result[0][19] == 1:
+        return 'T'
+    elif result[0][20] == 1:
+        return 'U'
+    elif result[0][21] == 1:
+        return 'V'
+    elif result[0][22] == 1:
+        return 'W'
+    elif result[0][23] == 1:
+        return 'X'
+    elif result[0][24] == 1:
+        return 'Y'
+    elif result[0][25] == 1:
+        return 'Z'
 
        
 

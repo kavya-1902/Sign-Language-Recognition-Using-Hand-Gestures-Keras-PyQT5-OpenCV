@@ -1,12 +1,9 @@
-__author__ = 'Shadab Shaikh, Obaid Kazi, Ansari Mohd Adnan'
-
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore						#importing pyqt5 libraries
-from scipy.ndimage import imread				#will help in reading the images
+from PyQt5 import QtCore						#importing pyqt5 librarie
 from PyQt5.QtCore import QTimer,Qt 
 from PyQt5 import QtGui							
 from tkinter import filedialog					#for file export module
@@ -25,7 +22,8 @@ import win32gui
 import win32con									#for removing title cv2 window and always on top
 import keyboard									#for pressing keys
 import pyttsx3									#for tts assistance
-import shutil									#for removal of directories
+import shutil		
+import imageio						#will help in reading the images					#for removal of directories
 index = 0										#index used for gesture viewer
 engine = pyttsx3.init()							#engine initialization for audio tts assistance
 
@@ -38,18 +36,18 @@ from keras.models import load_model
 classifier = load_model('ASLModel.h5')			#loading the model
 
 def fileSearch():
-	"""Searches each file ending with .png in SampleGestures dirrectory so that custom gesture could be passed to predictor() function"""
-	fileEntry=[]
-	for file in os.listdir("SampleGestures"):
-	    if file.endswith(".png"):
-	    	fileEntry.append(file)
-	return fileEntry							
+    """Searches each file ending with .png in SampleGestures directory so that custom gesture could be passed to predictor() function"""
+    fileEntry = []
+    for file in os.listdir("SampleGestures"):
+        if file.endswith(".png"):
+            fileEntry.append(file)
+    return fileEntry							
 
 def load_images_from_folder(folder):
     """Searches each images in a specified directory"""
     images = []
     for filename in os.listdir(folder):
-        img = cv2.imread(os.path.join(folder,filename))
+        img = imageio.imread(os.path.join(folder,filename))
         if img is not None:
             images.append(img)
     return images
@@ -87,7 +85,7 @@ def toggle_imagesrev(event):
 def openimg():
 	"""displays predefined gesture images at right most window"""
 	cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
-	image = cv2.imread('template.png')
+	image = imageio.imread('template.png')
 	cv2.imshow("Image",image)
 	cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 	cv2.resizeWindow("Image",298,430)
@@ -151,18 +149,19 @@ def controlTimer(self):
             
 
 def predictor():
-	""" Depending on model loaded and customgesture saved prediction is made by checking array or through SiFt algo"""
+	""" Depending on model loaded and custom gesture saved prediction is made by checking array or through SiFt algo"""
 	import numpy as np
 	from keras.preprocessing import image
-	test_image = image.load_img('1.png', target_size=(64, 64))
-	test_image = image.img_to_array(test_image)
-	test_image = np.expand_dims(test_image, axis = 0)
+	from keras.utils import load_img, img_to_array
+	test_image = load_img('1.png', target_size=(64, 64))
+	test_image = img_to_array(test_image)
+	test_image = np.expand_dims(test_image, axis=0)
 	result = classifier.predict(test_image)
-	gesname=''
-	fileEntry=fileSearch()
+	gesname = ''
+	fileEntry = fileSearch()
 	for i in range(len(fileEntry)):
-		image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[i])
-		original = cv2.imread("1.png")
+		image_to_compare = imageio.imread("./SampleGestures/" + fileEntry[i])
+		original = imageio.imread("1.png")
 		sift = cv2.xfeatures2d.SIFT_create()
 		kp_1, desc_1 = sift.detectAndCompute(original, None)
 		kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
@@ -176,67 +175,67 @@ def predictor():
 		good_points = []
 		ratio = 0.6
 		for m, n in matches:
-		      if m.distance < ratio*n.distance:
-		             good_points.append(m)
-		if(abs(len(good_points)+len(matches))>20):			#goodpoints and matcches sum from 1.png and customgestureimages is grater than 20
-			gesname=fileEntry[i]
-			gesname=gesname.replace('.png','')
-			if(gesname=='sp'):								#sp is replaced with <space>
-				gesname=' '
+			if m.distance < ratio * n.distance:
+				good_points.append(m)
+		if abs(len(good_points) + len(matches)) > 20:
+			gesname = fileEntry[i]
+			gesname = gesname.replace('.png', '')
+			if gesname == 'sp':
+				gesname = ' '
 			return gesname
 
 	if result[0][0] == 1:
-		  return 'A'
+		return 'A'
 	elif result[0][1] == 1:
-		  return 'B'
+		return 'B'
 	elif result[0][2] == 1:
-		  return 'C'
+		return 'C'
 	elif result[0][3] == 1:
-		  return 'D'
+		return 'D'
 	elif result[0][4] == 1:
-		  return 'E'
+		return 'E'
 	elif result[0][5] == 1:
-		  return 'F'
+		return 'F'
 	elif result[0][6] == 1:
-		  return 'G'
+		return 'G'
 	elif result[0][7] == 1:
-		  return 'H'
+		return 'H'
 	elif result[0][8] == 1:
-		  return 'I'
+		return 'I'
 	elif result[0][9] == 1:
-		  return 'J'
+		return 'J'
 	elif result[0][10] == 1:
-		  return 'K'
+		return 'K'
 	elif result[0][11] == 1:
-		  return 'L'
+		return 'L'
 	elif result[0][12] == 1:
-		  return 'M'
+		return 'M'
 	elif result[0][13] == 1:
-		  return 'N'
+		return 'N'
 	elif result[0][14] == 1:
-		  return 'O'
+		return 'O'
 	elif result[0][15] == 1:
-		  return 'P'
+		return 'P'
 	elif result[0][16] == 1:
-		  return 'Q'
+		return 'Q'
 	elif result[0][17] == 1:
-		  return 'R'
+		return 'R'
 	elif result[0][18] == 1:
-		  return 'S'
+		return 'S'
 	elif result[0][19] == 1:
-		  return 'T'
+		return 'T'
 	elif result[0][20] == 1:
-		  return 'U'
+		return 'U'
 	elif result[0][21] == 1:
-		  return 'V'
+		return 'V'
 	elif result[0][22] == 1:
-		  return 'W'
+		return 'W'
 	elif result[0][23] == 1:
-		  return 'X'
+		return 'X'
 	elif result[0][24] == 1:
-		  return 'Y'
+		return 'Y'
 	elif result[0][25] == 1:
-		  return 'Z'
+		return 'Z'
 			   
 
 def checkFile():
@@ -619,7 +618,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			pass
 
 	def scanSingle(self):
-		"""Single gesture scanner """
+		"""Single gesture scanner"""
 		try:
 			clearfunc(self.cam)
 		except:
@@ -629,59 +628,60 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
-		if(self.scan_sinlge.clicked.connect(self.scanSingle)):
+		if (self.scan_sinlge.clicked.connect(self.scanSingle)):
 			controlTimer(self)
-		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		self.pushButton_2.clicked.connect(lambda: clearfunc(self.cam))
 		self.linkButton.clicked.connect(openimg)
 		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		try:
-			self.exit_button.clicked.connect(lambda:clearfunc(self.cam))
+			self.exit_button.clicked.connect(lambda: clearfunc(self.cam))
 		except:
 			pass
 		self.exit_button.clicked.connect(self.quitApplication)
 		img_text = ''
 		while True:
 			ret, frame = self.cam.read()
-			frame = cv2.flip(frame,1)
+			frame = cv2.flip(frame, 1)
 			try:
-				frame=cv2.resize(frame,(321,270))
+				frame = cv2.resize(frame, (321, 270))
 				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-				img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+				img1 = cv2.rectangle(frame, (150, 50), (300, 200), (0, 255, 0), thickness=2, lineType=8, shift=0)
 			except:
 				keyboard.press_and_release('esc')
 
 			height1, width1, channel1 = img1.shape
 			step1 = channel1 * width1
-        	# create QImage from image
+			# create QImage from image
 			qImg1 = QImage(img1.data, width1, height1, step1, QImage.Format_RGB888)
-        	# show image in img_label
+			# show image in img_label
 			try:
 				self.label_3.setPixmap(QPixmap.fromImage(qImg1))
-				slider1=self.trackbar.value()
+				slider1 = self.trackbar.value()
 			except:
 				pass
 
 			lower_blue = np.array([0, 0, 0])
 			upper_blue = np.array([179, 255, slider1])
-			
+
 			imcrop = img1[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
-			
-			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
+
+			cv2.namedWindow("mask", cv2.WINDOW_NORMAL)
 			cv2.imshow("mask", mask)
-			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-			cv2.resizeWindow("mask",118,108)
-			cv2.moveWindow("mask", 894,271)
+			cv2.setWindowProperty("mask", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("mask", 118, 108)
+			cv2.moveWindow("mask", 894, 271)
 
 			hwnd = winGuiAuto.findTopWindow("mask")
-			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
-			
+			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, 0, 0,
+								win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
+
 			try:
-				self.textBrowser.setText("\n\n\t"+str(img_text))
+				self.textBrowser.setText("\n\n\t" + str(img_text))
 			except:
 				pass
 
@@ -689,9 +689,9 @@ class Dashboard(QtWidgets.QMainWindow):
 			save_img = cv2.resize(mask, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
 			img_text = predictor()
-				
+
 			if cv2.waitKey(1) == 27:
-			    break
+				break
 
 		self.cam.release()
 		cv2.destroyAllWindows()

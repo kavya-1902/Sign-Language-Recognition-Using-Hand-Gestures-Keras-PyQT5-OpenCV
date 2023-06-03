@@ -1,5 +1,3 @@
-__author__ = 'Shadab Shaikh, Obaid Kazi'
-
 import cv2
 import numpy as np
 
@@ -110,7 +108,6 @@ while True:
     u_s = cv2.getTrackbarPos("U - S", "Trackbars")
     u_v = cv2.getTrackbarPos("U - V", "Trackbars")
 
-
     img = cv2.rectangle(frame, (425,100),(625,300), (0,255,0), thickness=2, lineType=8, shift=0)
 
     lower_blue = np.array([l_h, l_s, l_v])
@@ -131,37 +128,40 @@ while True:
     img_name = "1.png"
     save_img = cv2.resize(mask, (image_x, image_y))
     cv2.imwrite(img_name, save_img)
-    img_text=predictor()
+    img_text = predictor()
+    
     if cv2.waitKey(1) == ord('c'):
-      try:
-        append_text+=img_text
-      except:
-        append_text+=''
-      cv2.putText(img1, append_text, (1, 10), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
-      try:
-        y=0
-        for x in range(len(finalBuffer)):
-          cv2.putText(img2, finalBuffer[x], (1, 10+y), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
-          y+=20
-      except:
-        pass
-      cv2.imshow("Freezing Window", img1)     
-      cv2.imshow("Output Window", img2)
-      
-      if(len(append_text)>25):
-        finalBuffer.append(append_text)
-        print(finalBuffer[z])
-        append_text=''
-        z+=1
+        try:
+            append_text += img_text
+        except:
+            append_text += ''
         
+        cv2.putText(img1, append_text, (1, 10), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
+        
+        try:
+            y = 0
+            for x in range(len(finalBuffer)):
+                cv2.putText(img2, finalBuffer[x], (1, 10+y), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
+                y += 20
+        except:
+            pass
+        
+        cv2.imshow("Freezing Window", img1)     
+        cv2.imshow("Output Window", img2)
+      
+        if len(append_text) > 25:
+            finalBuffer.append(append_text)
+            print(finalBuffer[z])
+            append_text = ''
+            z += 1
 
     if cv2.waitKey(1) == 27:
-    	f=open("temp.txt","w")
-    	for i in finalBuffer:
-    		f.write(i)
-    	f.close()
-    	
-    	break
+        f = open("temp.txt","w")
+        for i in finalBuffer:
+            f.write(i)
+        f.close()
+        break
+
 	    
 
 cam.release()
